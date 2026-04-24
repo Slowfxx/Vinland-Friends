@@ -1,0 +1,56 @@
+# Vinland-Friends
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vila dos Amigos</title>
+    <style>
+        #mapa {
+            width: 600px;
+            height: 400px;
+            background-color: #7cfc00; /* Cor de grama */
+            position: relative;
+            border: 5px solid #8b4513;
+            cursor: crosshair;
+        }
+        .casa {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: brown;
+            border-top: 15px solid red; /* Telhadinho */
+            text-align: center;
+            font-size: 10px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Clica no mapa para construir tua casa!</h1>
+    <div id="mapa" onclick="construir(event)"></div>
+
+    <script>
+        function construir(event) {
+            const mapa = document.getElementById('mapa');
+            const rect = mapa.getBoundingClientRect();
+            
+            // Calcula a posição do clique
+            const x = event.clientX - rect.left - 15;
+            const y = event.clientY - rect.top - 15;
+
+            const nome = prompt("Quem vai morar aqui?");
+            
+            if(nome) {
+                const novaCasa = document.createElement('div');
+                novaCasa.className = 'casa';
+                novaCasa.style.left = x + 'px';
+                novaCasa.style.top = y + 'px';
+                novaCasa.innerHTML = nome;
+                mapa.appendChild(novaCasa);
+                
+                // AQUI entraria o código para salvar no Firebase/Supabase
+                alert(nome + " construiu uma casa!");
+            }
+        }
+    </script>
+</body>
+</html>

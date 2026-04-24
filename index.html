@@ -3,94 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vila dos Amigos</title>
+    <title>Vila dos Friendos 🚀</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background-color: #2c3e50; color: white; }
-        #mapa {
-            width: 90vw; /* Responsivo para celular */
-            max-width: 600px;
-            height: 400px;
-            background-color: #7cfc00;
-            position: relative;
-            border: 5px solid #8b4513;
-            cursor: crosshair;
-            margin: 20px auto;
-            overflow: hidden;
-            border-radius: 10px;
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            background-color: #2c3e50; 
+            color: white; 
+            margin: 0;
+            padding: 20px;
         }
+        h1 { margin-bottom: 5px; color: #ecf0f1; }
+        p { color: #bdc3c7; margin-bottom: 20px; }
+        
+        #mapa {
+            width: 95vw;
+            max-width: 600px;
+            height: 450px;
+            background-color: #2ecc71; /* Verde grama */
+            position: relative;
+            border: 8px solid #8b4513; /* Borda de madeira */
+            cursor: crosshair;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            /* Grid para parecer mapa */
+            background-image: radial-gradient(#27ae60 10%, transparent 10%);
+            background-size: 20px 20px;
+        }
+        
         .casa {
             position: absolute;
-            width: 30px;
-            height: 30px;
-            background: #8b4513;
-            border-top: 15px solid #e74c3c;
+            width: 34px;
+            height: 34px;
+            background: #a35229;
+            border-top: 18px solid #c0392b;
             text-align: center;
-            font-size: 10px;
+            font-size: 11px;
             color: white;
             font-weight: bold;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
         }
+        
+        .casa:hover { transform: scale(1.2); z-index: 10; }
     </style>
 </head>
 <body>
 
-    <h1>Vila do Slow 🚀</h1>
-    <p>Toque no mapa para construir sua casa!</p>
+    <h1>Vila dos Friendos 🏡</h1>
+    <p>Toque em qualquer lugar para construir sua casa!</p>
     
     <div id="mapa"></div>
 
     <script type="module">
-      // Importando os módulos necessários do Firebase
+      // Importações específicas para Web/Acode
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
       import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-      // 1. COLE SUAS CONFIGURAÇÕES REAIS AQUI ABAIXO
+      // Suas configurações reais da Vila dos Friendos
       const firebaseConfig = {
         apiKey: "AIzaSyB2ZMlYu2mYZfvxYj0qrSnr2aLUIX8ne5s",
-        authDomain: "seu-projeto.firebaseapp.com",
-        databaseURL: "https://seu-projeto.firebaseio.com",
-        projectId: "seu-projeto",
-        storageBucket: "seu-projeto.appspot.com",
-        messagingSenderId: "12345",
-        appId: "1:12345:web:abcde"
+        authDomain: "vila-dos-friendos.firebaseapp.com",
+        databaseURL: "https://vila-dos-friendos-default-rtdb.firebaseio.com",
+        projectId: "vila-dos-friendos",
+        storageBucket: "vila-dos-friendos.firebasestorage.app",
+        messagingSenderId: "506752837520",
+        appId: "1:506752837520:web:7f204b305bfe49f969f515",
+        measurementId: "G-31L0B5SFHH"
       };
 
-      // Inicializa o Firebase
+      // Inicializa o Firebase e o Banco de Dados
       const app = initializeApp(firebaseConfig);
       const db = getDatabase(app);
       const casasRef = ref(db, 'casas');
 
       const mapa = document.getElementById('mapa');
 
-      // 2. FUNÇÃO PARA CONSTRUIR (Atribuída ao mapa via código)
+      // Função de construção
       mapa.onclick = function(event) {
-        const nome = prompt("Quem vai morar aqui?");
+        const nome = prompt("Qual o nome da sua residência ou o seu nome?");
         if (!nome) return;
 
         const rect = mapa.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
-        // Salva as coordenadas e o nome no Banco de Dados
+        // Salva no Firebase
         push(casasRef, {
-          dono: nome,
+          dono: nome.substring(0, 10), // Limita a 10 letras pra não quebrar o layout
           posX: x,
           posY: y
         });
       };
 
-      // 3. ESCUTA O BANCO: Desenha a casa sempre que uma nova for criada
+      // Escuta o banco e desenha as casas de todo mundo em tempo real
       onChildAdded(casasRef, (data) => {
         const info = data.val();
         const novaCasa = document.createElement('div');
         novaCasa.className = 'casa';
-        // Ajuste para a casa aparecer centralizada no clique
-        novaCasa.style.left = (info.posX - 15) + 'px';
-        novaCasa.style.top = (info.posY - 15) + 'px';
+        
+        // Centraliza a casinha exatamente onde o dedo tocou
+        novaCasa.style.left = (info.posX - 17) + 'px';
+        novaCasa.style.top = (info.posY - 17) + 'px';
+        
         novaCasa.innerHTML = info.dono;
         mapa.appendChild(novaCasa);
       });
     </script>
 </body>
 </html>
-
